@@ -73,7 +73,6 @@ public class ChatServer {
                             clientSocket.read(buffer);
 
                             String clientRequest = new String(buffer.array()).trim();
-
                             String[] parts = clientRequest.split(";");
 
                             if(parts[0].equals("login")) {
@@ -114,14 +113,14 @@ public class ChatServer {
     private void handleText(SocketChannel socketChannel, String[] parts) {
         String id = connectedClients.get(socketChannel).getClientId();
         String message = id + ": ";
-        for(int i = 0; i < parts.length; i++) {
+        for(int i = 1; i < parts.length; i++) {
             message = message + parts[i];
             if(i != parts.length - 1) {
                 message = message + " ";
             }
         }
 
-        message = message + ", mówię ja, " + id;
+        //message = message + ", mówię ja, " + id;
 
         logToServer(message);
 
@@ -129,7 +128,7 @@ public class ChatServer {
     }
 
     private void broadCastMessage(String message) {
-        CharBuffer charBuffer = CharBuffer.wrap(message);
+        CharBuffer charBuffer = CharBuffer.wrap(message + ";");
         ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(charBuffer);
         for(SocketChannel socketChannel : connectedClients.keySet()) {
             try {
@@ -152,10 +151,14 @@ public class ChatServer {
 
     public void stopServer() {
         try {
+            System.out.println("Stopping");
             serverThread.interrupt();
+            System.out.println("A");
             Thread.sleep(300);
             serverSocketChannel.close();
+            System.out.println("B");
             selector.close();
+            System.out.println("C");
             System.out.println("Server stopped");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

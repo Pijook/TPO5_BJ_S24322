@@ -41,15 +41,15 @@ public class ChatClient {
     }
 
     public void login() {
-        send("login;" + id);
+        System.out.print(send("login;" + id));
     }
 
     public void logout() {
-        send("logout;" + id);
+        System.out.print(send("logout;" + id));
     }
 
     public void text(String message) {
-        send("text;" + message);
+        System.out.print(send("text;" + message));
     }
 
     public String getChatView() {
@@ -86,7 +86,6 @@ public class ChatClient {
             while(toRead == 0) {
                 Thread.sleep(toSleep);
                 toRead = socket.read(byteBuffer);
-                System.out.println("0" + toRead);
             }
 
             while(toRead != 0) {
@@ -97,7 +96,6 @@ public class ChatClient {
                 byteBuffer.clear();
 
                 toRead = socket.read(byteBuffer);
-                System.out.println("!0" + toRead);
             }
         }
         catch (IOException e) {
@@ -105,7 +103,6 @@ public class ChatClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         return response.toString().replace(";", "\n");
     }
 
